@@ -31,6 +31,9 @@ class RandomizationMode(Enum):
         return self.value in [0, 4, 5]
 
 
+dummy_signature = bytes.fromhex('b6d7d13b6a90eb7370b7abbc58cdff00c72fc4a471bcff72eb3a7813bd24fafea714477ae6af814bbcb7dff9d404a17e0695fd8bf14e92787b8c32a42968815c4aef90bb3a633300914657afa15c63a1f5fa015860550dd89cc110dff1a41599')
+
+
 def get_random_ssz_object(rng: Random, typ: Any, max_bytes_length: int, max_list_length: int, mode: RandomizationMode, chaos: bool) -> Any:
     """
     Create an object for a given type, filled with random data.
@@ -88,7 +91,11 @@ def get_random_ssz_object(rng: Random, typ: Any, max_bytes_length: int, max_list
         return [get_random_ssz_object(rng, typ[0], max_bytes_length, max_list_length, mode, chaos) for _ in range(length)]
     # Container:
     elif hasattr(typ, 'fields'):
-        return typ(**{field: get_random_ssz_object(rng, subtype, max_bytes_length, max_list_length, mode, chaos) for field, subtype in typ.fields.items()})
+        out = typ(**{field: get_random_ssz_object(rng, subtype, max_bytes_length, max_list_length, mode, chaos) for field, subtype in typ.fields.items()})
+        # Make signatures valid and not random, so they can be loaded into more sophisticated data types.
+        if 'signature' in typ.fields:
+            out.signature = dummy_signature
+        return out
     else:
         print(typ)
         raise Exception("Type not recognized")
