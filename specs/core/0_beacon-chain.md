@@ -1039,6 +1039,24 @@ def verify_indexed_attestation(state: BeaconState, indexed_attestation: IndexedA
     if custody_bit_1_indices != sorted(custody_bit_1_indices):
         return False
 
+    message_hashes_master=[
+        hash_tree_root(AttestationDataAndCustodyBit(data=indexed_attestation.data, custody_bit=0b0), verbose=True),
+        hash_tree_root(AttestationDataAndCustodyBit(data=indexed_attestation.data, custody_bit=0b1), verbose=True),
+    ]
+
+    print("Using integer custody bits")
+    print("msg0: {}".format(message_hashes_master[0].hex()))
+    print("msg1: {}".format(message_hashes_master[1].hex()))
+
+    message_hashes_fixed=[
+        hash_tree_root(AttestationDataAndCustodyBit(data=indexed_attestation.data, custody_bit=False), verbose=True),
+        hash_tree_root(AttestationDataAndCustodyBit(data=indexed_attestation.data, custody_bit=True), verbose=True),
+    ]
+
+    print("Using boolean custody bits")
+    print("msg0: {}".format(message_hashes_fixed[0].hex()))
+    print("msg1: {}".format(message_hashes_fixed[1].hex()))
+
     return bls_verify_multiple(
         pubkeys=[
             bls_aggregate_pubkeys([state.validator_registry[i].pubkey for i in custody_bit_0_indices]),

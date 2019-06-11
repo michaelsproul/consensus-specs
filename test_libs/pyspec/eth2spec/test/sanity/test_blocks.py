@@ -26,7 +26,7 @@ from eth2spec.test.helpers.proposer_slashings import get_valid_proposer_slashing
 from eth2spec.test.helpers.attestations import get_valid_attestation
 from eth2spec.test.helpers.deposits import prepare_state_and_deposit
 
-from eth2spec.test.context import spec_state_test, never_bls
+from eth2spec.test.context import spec_state_test, never_bls, always_bls
 
 
 @never_bls
@@ -228,6 +228,7 @@ def test_deposit_top_up(state):
     assert get_balance(state, validator_index) == validator_pre_balance + amount
 
 
+@always_bls
 @spec_state_test
 def test_attestation(state):
     state.slot = spec.SLOTS_PER_EPOCH

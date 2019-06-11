@@ -267,7 +267,9 @@ def infer_type(value):
         raise Exception("Failed to infer type")
 
 
-def hash_tree_root(value, typ=None):
+def hash_tree_root(value, typ=None, verbose=False):
+    if verbose:
+        print("HASH TREE ROOT CALLED ON:\n{}\n".format(value))
     if typ is None:
         typ = infer_type(value)
     # -------------------------------------
