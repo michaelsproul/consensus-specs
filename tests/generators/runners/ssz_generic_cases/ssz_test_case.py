@@ -55,3 +55,21 @@ def invalid_test_case(typ: type[View], bytez_fn: Callable[[], bytes], rng: Rando
         )
 
     return case_fn
+
+
+def invalid_test_case_unchecked(bytez_fn: Callable[[], bytes], rng: Random = None):
+    """
+    Generate an invalid test case without verifying against the Python SSZ implementation.
+    Use this for cases where the SSZ specification clearly requires rejection, but the
+    Python implementation may not correctly detect the error.
+    """
+    seed = capture_seed(rng)
+
+    def case_fn():
+        if seed is not None:
+            serialized = safe_lambda(bytez_fn)(rng=Random(seed))
+        else:
+            serialized = safe_lambda(bytez_fn)()
+        yield "serialized", "ssz", serialized
+
+    return case_fn
