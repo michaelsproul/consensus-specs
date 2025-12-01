@@ -31,6 +31,8 @@ into a SSZ type:
   - [`containers`](#uints)
 - ProgressiveContainer
   - [`progressive_containers`](#progressive_containers)
+- Union
+  - [`unions`](#unions)
 - CompatibleUnion
   - [`compatible_unions`](#compatible_uniosn)
 
@@ -328,4 +330,23 @@ CompatibleUnionABCA = CompatibleUnion(
         4: ProgressiveSingleFieldContainerTestStruct,
     }
 )
+```
+
+### `unions`
+
+A simple union type is used to test Union-specific decoding edge cases,
+particularly the handling of the None selector with trailing bytes.
+
+```
+Template:
+
+UnionNoneUint64
+
+Data:
+
+UnionNoneUint64: Union[None, uint64]
+```
+
+```python
+UnionNoneUint64 = Union[None, uint64]
 ```

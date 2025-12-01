@@ -14,6 +14,7 @@ from .ssz_generic_cases import (
     ssz_progressive_bitlist,
     ssz_progressive_container,
     ssz_uints,
+    ssz_union,
 )
 
 
@@ -39,6 +40,8 @@ def get_test_cases() -> Iterable[TestCase]:
         ("progressive_containers", "invalid", ssz_progressive_container.invalid_cases),
         ("uints", "valid", ssz_uints.valid_cases),
         ("uints", "invalid", ssz_uints.invalid_cases),
+        ("unions", "valid", ssz_union.valid_cases),
+        ("unions", "invalid", ssz_union.invalid_cases),
     ]
 
     test_cases = []
